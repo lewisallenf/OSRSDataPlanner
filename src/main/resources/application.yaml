@@ -1,1 +1,16 @@
-spring.application.name=OSRSDataPlanner
+spring:
+  application:
+    name: OSRSDataPlanner
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5433}/${POSTGRES_DB:osrsDataPlanner_Dev}
+    username: ${POSTGRES_USERNAME:osrsDataPlanner_Dev}
+    password: ${POSTGRES_PASSWORD:osrsDataPlanner_Dev12345}
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+server:
+  port: 8080
