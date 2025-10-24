@@ -16,8 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +30,7 @@ public class CharacterServiceTest {
     //Uses the array in CharacterEntity to create the array character
     private CharacterEntity[] characters;
 
+    /// //////////////////////////////////////////////////TEST FOR REQUESTS////////////////////////////////////////////////
     @BeforeEach
     public void setUp() {
         // ARRANGE: Create multiple test characters
@@ -86,16 +86,31 @@ public class CharacterServiceTest {
     }
     @Test
     void shouldUpdateCharacter(){
+        CharacterEntity existingForUpdateTest = characters[0];
+        CharacterEntity updatedCharacter = new CharacterEntity(1L, "UpdatedHero", 75, 50000.0, Timestamp.from(Instant.now()));
         //Arrange
+        when(characterRepositoryForServiceTest.findById(1L)).thenReturn(Optional.of(existingForUpdateTest));
+        when(characterRepositoryForServiceTest.save(any(CharacterEntity.class))).thenReturn(updatedCharacter);
         //Act
         //Assert
+        CharacterEntity result = characterServiceForServiceTest.update(1L, updatedCharacter);
+
+        assertNotNull(result);
+        assertEquals("UpdatedHero", result.getUsername());
         // Verify(Optional)
+        verify(characterRepositoryForServiceTest, times(1)).save(any(CharacterEntity.class));
+
     }
     @Test
     void shouldDeleteCharacter(){
         //Arrange
+        when(characterRepositoryForServiceTest.existsById(1L)).thenReturn(true);
+        doNothing().when(characterRepositoryForServiceTest).deleteById(1L);
         //Act
         //Assert
+        boolean result = characterServiceForServiceTest.delete(1L);
+        assertTrue(result);
         // Verify(Optional)
+        verify(characterRepositoryForServiceTest, times(1)).deleteById(1L);
     }
 }

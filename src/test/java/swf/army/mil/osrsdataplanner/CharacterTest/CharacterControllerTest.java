@@ -3,11 +3,12 @@ package swf.army.mil.osrsdataplanner.CharacterTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.MediaType;
+import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import swf.army.mil.osrsdataplanner.Character.CharacterController;
 import swf.army.mil.osrsdataplanner.Character.CharacterEntity;
 import swf.army.mil.osrsdataplanner.Character.CharacterService;
 
@@ -17,12 +18,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(CharacterController.class)
 public class CharacterControllerTest {
 
     @Autowired
@@ -93,17 +93,30 @@ public class CharacterControllerTest {
     }
     @Test
     void shouldUpdateCharacter() throws Exception{
+        CharacterEntity updatedCharacter = new CharacterEntity(1L, "updatedHero", 75, 50000.0, Timestamp.from(Instant.now()));
         //Arrange
-        //Act
-        //Assert
-        // Verify(Optional)
+        when(mockCharacterService.update(eq(1L), any(CharacterEntity.class))).thenReturn(updatedCharacter);
+        //Act&Assert
+        mockMvc.perform(put("/api/characters/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedCharacter)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("updatedHero"))
+                .andExpect(jsonPath("$.combatLevel").value(75));
+
+        verify(mockCharacterService, times(1)).update(eq(1L), any(CharacterEntity.class));
     }
     @Test
-    void shouldDeleteCharacter(){
+    void shouldDeleteCharacter() throws Exception {
         //Arrange
+        when(mockCharacterService.delete(1L)).thenReturn(true);
         //Act
         //Assert
+        mockMvc.perform(delete("/api/characters/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
         // Verify(Optional)
+        verify(mockCharacterService, times(1)).delete(1L);
     }
 
 }

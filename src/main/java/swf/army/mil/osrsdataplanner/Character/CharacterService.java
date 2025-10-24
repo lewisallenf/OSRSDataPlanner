@@ -11,6 +11,7 @@ public class CharacterService {
     public CharacterService(CharacterRepository characterRepositoryForService){
         this.characterRepositoryForService = characterRepositoryForService;
     }
+    /// ///////////////////////////////REQUESTS///////////////////////////////////////////////////////////
 
     public List<CharacterEntity> getAll() {
        return characterRepositoryForService.findAll();
@@ -23,6 +24,26 @@ public class CharacterService {
 
     public CharacterEntity create(CharacterEntity character) {
         return characterRepositoryForService.save(character);
+    }
+
+    public CharacterEntity update(Long id, CharacterEntity updatedCharacter){
+        return characterRepositoryForService.findById(id)
+                .map(existing ->{
+                    existing.setUsername(updatedCharacter.getUsername());
+                    existing.setCombatLevel(updatedCharacter.getCombatLevel());
+                    existing.setTotalXP(updatedCharacter.getTotalXP());
+                    existing.setRequestCreated(updatedCharacter.getRequestCreated());
+                    return characterRepositoryForService.save(existing);
+                })
+                .orElse(null);
+    }
+
+    public boolean delete(Long id){
+        if(!characterRepositoryForService.existsById(id)){
+            return false;
+        }
+        characterRepositoryForService.deleteById(id);
+        return true;
     }
 }
 

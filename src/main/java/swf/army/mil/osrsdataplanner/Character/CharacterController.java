@@ -2,7 +2,6 @@ package swf.army.mil.osrsdataplanner.Character;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -37,6 +36,22 @@ public class CharacterController {
         return ResponseEntity.ok(savedCharacter);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<CharacterEntity> updateCharacter(@PathVariable("id") Long id, @RequestBody CharacterEntity character){
+        CharacterEntity result = characterServiceForController.update(id, character);
+        if(result == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(result);
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCharacter(@PathVariable Long id){
+        boolean deleted = characterServiceForController.delete(id);
+        if (!deleted) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
+    }
 }
 

@@ -1,42 +1,50 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.body/* Full-page centering for all routes/pages */
+
+html, body, #root {
+    height: 200%;
+    margin: 0;
+    padding: 0;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+body {
+    display: flex;
+    justify-content: center;  /* centers horizontally */
+    background: linear-gradient(to bottom, #1a1a1a, #000); /* optional background */
+    color: #f5f5f5;           /* text color */
+    font-family: 'Inter', sans-serif;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Ensure each page fills the viewport */
+.App, .page-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  /* vertical centering */
+    align-items: center;      /* horizontal centering */
+    text-align: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Optional: Make the search bar area look balanced */
+.search-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 800px;
 }
 
-.card {
-  padding: 2em;
+/* Optional: Styling for headers and text */
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
 }
 
-.read-the-docs {
-  color: #888;
+p {
+    max-width: 600px;
+    font-size: 1.1rem;
+    color: #d1d5db;
 }
